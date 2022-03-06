@@ -25,7 +25,7 @@ def main():
         ## Read frame
         ret, frame = cap.read()
         if ret:
-            frame = cv2.resize(frm, (910, 512))    # Resize image
+            frame = cv2.resize(frame, (910, 512))    # Resize image
 ## ADD YOUR CODE HERE!
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
@@ -47,7 +47,7 @@ def main():
 
         # delay in 5 milliseconds
         k = cv2.waitKey(5) & 0xFF
-        # 27 is the escape character
+        # 27 is the Escape character
         if k == 27:
             break
 
