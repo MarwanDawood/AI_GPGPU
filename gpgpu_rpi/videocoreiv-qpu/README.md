@@ -32,10 +32,10 @@ We will feed various inputs such as shader programs into the blob via entry
 points (such as provided by OpenGL ES) and observe the outputs.
 
 At all times we will obey:
-  "This software may only be used for the purposes of developing for, 
+  "This software may only be used for the purposes of developing for,
     running or using a Raspberry Pi device."
 
-as stipulated in the license: 
+as stipulated in the license:
    https://github.com/raspberrypi/firmware/blob/master/boot/LICENCE.broadcom.
 </pre>
 
@@ -48,7 +48,7 @@ In recommended reading order:
 * [US20110221743](http://www.google.com/patents/US20110221743)  Method and System for Controlling a 3d Processor Using a Control List in Memory
 * [US20110242113](http://www.google.com/patents/US20110242113)  Method and System for Processing Pixels Utilizing Scoreboarding
 * [US20110261059](http://www.google.com/patents/US20110261059)  Method and System for Decomposing Complex Shapes Into Curvy RHTS For Rasterization
-* [US20080291208](http://www.google.com/patents/US20080291208)  Method and System for Processing Data Via a 3d Pipeline Coupled to a Generic Video Processing Unit 
+* [US20080291208](http://www.google.com/patents/US20080291208)  Method and System for Processing Data Via a 3d Pipeline Coupled to a Generic Video Processing Unit
 
 ### Recommended Background
 In recommended reading order:
@@ -90,7 +90,7 @@ the work here becomes useful the names are common for anyone doing this in a com
 <pre>
   &lt;addop&gt;&lt;addcc&gt; wa, radda, raddb [setf] ; &lt;mulop&gt;&lt;mulcc&gt; wb, rmula, rmulb [setf] ; &lt;op&gt;
   &lt;addop&gt;&lt;addcc&gt; wb, radda, raddb [setf] ; &lt;mulop&gt;&lt;mulcc&gt; wa, rmula, rmulb [setf] ; &lt;op&gt;
-  
+
   radda = ra | ra >> shift | imm6 | rb | r0..r5
   raddb = rb | ra >> shift | imm6 | rb | r0..r5
   rmula = ra | ra >> shift | imm6 | rb | r0..r5
@@ -138,7 +138,7 @@ Where:
     11101
     11110  v8adds   rd[i] = sat8(ra[i]+rb[i]), i = 0..3 / a..d
     11111  v8subs   rd[i] = sat8(ra[i]-rb[i]), i = 0..3 / a..d
-    
+
   mulop is the multiplication ALU operation.
       000  nop
       001  fmul    rd = ra * rb
@@ -148,7 +148,7 @@ Where:
       101  v8max   rd[i] = max(ra[i], rb[i]), i = 0..3 / a..d
       110  v8adds  rd[i] = sat8(ra[i] + rb[i]), i = 0..3 / a..d
       111  v8subs  rd[i] = sat8(ra[i] - rb[i]), i = 0..3 / a..d
-      
+
   op is the signaling or control flow operation.
      0000  bpkt
      0001  nop
@@ -162,15 +162,15 @@ Where:
      1001  ldcend  load tlb color and thread end
      1010  ldtmu0  load tmu0
      1011  ldtmu1  load tmu1
-     1100  loadam  
+     1100  loadam
      1101  nop     (small constant encoded in field rb)
      1110  ldi     load immediate
      1111  bra     branch
-     
-  (Replacing the following names, thread-switch, thread-end, scoreboard-wait, scoreboard-done, last-thread-switch, 
+
+  (Replacing the following names, thread-switch, thread-end, scoreboard-wait, scoreboard-done, last-thread-switch,
    (openvg coverage?), load-gl_FragColor, load-gl_FragColor-and-thread-end, load-tmu0, load-tmu1,
    (openvg alpha mask?))
-   
+
   adda, addb encode which accumulator or ra, rb value will be supplied to the add ALU.
   mula, mulb encode which accumulator or ra, rb value will be supplied to the multiplication ALU.
     000  r0  accumulator 0
@@ -181,12 +181,12 @@ Where:
     101  r5  accumulator 5
     110  ra  register from bank a
     111  rb  register from bank b
-  
+
   packbits control the packing/unpacking operation.
     Each 32 bit value can be viewed as (a:8, b:8, c:8, d:8) or (a:16, b:16)
     uuu0pppp unpack from ra0-31 only, pack to ra0-31 only.
     uuu1pppp unpack from r4 only, pack (multiply dst only) to r0-r3, ra0-31 or rb0-31.
-   
+
   uuu unpacking add/mul source (rb)
     000  (32) full 32 bit value
     001  16a  unpack from 16a
@@ -196,7 +196,7 @@ Where:
     101  8b   unpack from 8b
     110  8c   unpack from 8c
     111  8d   unpack from 8d
-    
+
   0pppp pack add result
     0000  (32)
     0001  16a
@@ -214,7 +214,7 @@ Where:
     1101  8bs
     1110  8cs
     1111  8ds
-            
+
   1pppp pack mul result
     0000  (32)
     0001
@@ -231,8 +231,8 @@ Where:
     1100
     1101
     1110
-    1111 
-            
+    1111
+
   addcc holds the cc predicate for conditional execution of the add instruction.
   mulcc holds the cc predicate for conditional execution of the mul instruction.
     000  .never  never
@@ -243,27 +243,27 @@ Where:
     101  .nc     negative clear
     110  .cs     carry set
     111  .cc     carry clear
-    
+
   F is set to update cc flags (there are Zero, Negative and Carry flags per unit) - SETF
     Normally the result of the add operation is used to determine the new cc flags.
     If the add operation is a nop, then the result of the multiply operation is used.
-    
+
   X is set to exchange values on the writeback (ie the crossed lines in the diagram).
 
   ra is register bank A value to read.
     ra0..ra31 are registers, whilst ra32..ra63 are peripheral addresses.
-    
+
   rb is register bank B value to read.
     rb0..rb31 are registers, whilst rb32..rb63 are peripheral addresses.
 
   wa is destination for the add or mul result (depends on X).
     ra0..ra31 are registers, whilst ra32..ra63 are peripheral addresses.
-      
+
   wb is destination for the add or mul result (depends on X).
     rb0..rb31 are registers, whilst rb32..rb63 are peripheral addresses.
-    
+
             ra         rb         wa         wb
-            
+
     000000  ra00       rb00       ra00       rb00
     000001  ra01       rb01       ra01       rb01
     000010  ra02       rb02       ra02       rb02
@@ -296,24 +296,24 @@ Where:
     011101  ra29       rb29       ra29       rb29
     011110  ra30       rb30       ra30       rb30
     011111  ra31       rb31       ra31       rb31
-    100000  unif       unif       r0         r0         
-    100001                        r1         r1         
-    100010                        r2         r2         
-    100011  vary       vary       r3         r3         
-    100100                        tmurs      tmurs         
-    100101                        r5quad     r5rep         
+    100000  unif       unif       r0         r0
+    100001                        r1         r1
+    100010                        r2         r2
+    100011  vary       vary       r3         r3
+    100100                        tmurs      tmurs
+    100101                        r5quad     r5rep
     100110  elem_num   qpu_num    irq        irq
     100111  (nop)      (nop)      (nop)      (nop)
     101000                        unif_addr  unif_addr_rel
     101001  x_coord    y_coord    x_coord    y_coord
     101010  ms_mask    rev_flag   ms_mask    rev_flag
     101011                        stencil    stencil
-    101100                        tlbz       tlbz       
-    101101                        tlbm       tlbm       
-    101110                        tlbc       tlbc       
-    101111                        tlbam?     tlbam?     
-    110000  vpm        vpm        vpm        vpm        
-    110001  vr_busy    vw_busy    vr_setup   vw_setup   
+    101100                        tlbz       tlbz
+    101101                        tlbm       tlbm
+    101110                        tlbc       tlbc
+    101111                        tlbam?     tlbam?
+    110000  vpm        vpm        vpm        vpm
+    110001  vr_busy    vw_busy    vr_setup   vw_setup
     110010  vr_wait    vw_wait    vr_addr    vw_addr
     110011  mutex      mutex      mutex      mutex
     110100                        recip      recip
@@ -327,24 +327,24 @@ Where:
     111100                        t1s        t1s
     111101                        t1t        t1t
     111110                        t1r        t1r
-    111111                        t1b        t1b  
-      
+    111111                        t1b        t1b
+
   rb - Small constants, active when signal/control operation is 1101:
-  
+
     imm      ra       rb
- 
+
     0  i:5   ra        i            Signed 4 bit immediate
-    10 i:4   ra        1.0 &lt;&lt; i     Shift by signed 4 bit quantity   
+    10 i:4   ra        1.0 &lt;&lt; i     Shift by signed 4 bit quantity
     11 0000  ra &gt;&gt; A5  -
-    11 d:4   ra &gt;&gt; d   -                
-    
+    11 d:4   ra &gt;&gt; d   -
+
 </pre>
 
 #### Branches:
 <pre>
   # Branch absolute to addr+ra, optionally save return address to wa and/or wb.
   bra[&lt;cond&gt;] [wa|wb], addr[+ra]
-  
+
   # Branch relative to pc+addr+ra, optionally save return address to wa and/or wb.
   brr[&lt;cond&gt;] [wa|wb], addr[+ra]
 </pre>
@@ -382,7 +382,7 @@ Where:
 #### Move Immediate:
 <pre>
   movi[&lt;addcc&gt;] wa, data [setf] ; movi[&lt;mulcc&gt;] wb, data [setf]
-  movi[&lt;addcc&gt;] wb, data [setf] ; movi[&lt;mulcc&gt;] wa, data [setf]  
+  movi[&lt;addcc&gt;] wb, data [setf] ; movi[&lt;mulcc&gt;] wa, data [setf]
 </pre>
 Encoding:
 <pre>
@@ -499,4 +499,3 @@ The fragments can then be saved via:
  $ sudo vcdbg save GLXX_BUFFER_INNER_T.storage 0x1dcc7c20 96
 </pre>
 [View an analysis of some sample fragments](Traces1.md)
-
