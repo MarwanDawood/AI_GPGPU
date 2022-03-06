@@ -25,7 +25,7 @@ def main():
         ## Read frame
         ret, frame = cap.read()
         if ret:
-
+            frame = cv2.resize(frm, (910, 512))    # Resize image
 ## ADD YOUR CODE HERE!
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
